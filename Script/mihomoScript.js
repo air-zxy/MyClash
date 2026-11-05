@@ -905,10 +905,10 @@ function getIpVersionPreference() {
 /**
  * 过滤并标准化节点：剔除内置/信息节点、按配置过滤、去重、修复 dialer-proxy 引用，空列表时抛错
  */
-function filterAndNormalizeProxies(config) {
+function filterAndNormalize(config) {
   regionMatchCache.clear();
 
-  const filterLowRateProxiesEnabled = ruleOptionsEnable.过滤低倍率节点;
+  const filterLowRateEnabled = ruleOptionsEnable.过滤低倍率节点;
   const filterHighRateProxiesEnabled = ruleOptionsEnable.过滤高倍率节点;
   const filterNonRegionProxiesEnabled = ruleOptionsEnable.过滤非地区节点;
 
