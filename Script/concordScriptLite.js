@@ -3,7 +3,7 @@
  * 作者：AIsouler
  * 源仓库：https://github.com/AIsouler/MyClash
  * 脚本链接：https://raw.githubusercontent.com/AIsouler/MyClash/main/Script/concordScriptLite.js
- * 兼容说明：已按 Concord 兼容性文档移除不支持的参数（path-in-bundle、bind-address、external-ui、tun.auto-redirect、external-controller）
+ * 兼容说明：已按 Concord 兼容性文档移除不支持的参数（path-in-bundle、external-ui、tun.auto-redirect、external-controller）
  * 友情推荐，非常好用、省电且内存占用低的代理软件：https://github.com/appshubcc/Bettbox
  */
 
@@ -1520,11 +1520,25 @@ function main(config) {
 
   newConfig['dns'] = dns;
   newConfig['hosts'] = hosts;
+
+  newConfig['rules'] = [
+    ...priorityRules,
+    ...prefixRules,
+    ...(ruleOptionsEnable.屏蔽代理QUIC流量 ? blockForeignQuic : []),
+    ...functionalRules,
+    'RULE-SET,geolocation-!cn,默认代理',
+    'RULE-SET,cn_ip,直连',
+    'RULE-SET,private_ip,直连',
+    ...functionalIpRules,
+    `MATCH,${ruleOptionsEnable.极简国内外分流模式 ? '默认代理' : '漏网之鱼'}`,
+  ];
+
   newConfig['mixed-port'] = 7890;
   newConfig['allow-lan'] = true;
   newConfig['ipv6'] = true;
   newConfig['mode'] = 'rule';
   newConfig['log-level'] = 'info';
+  newConfig['bind-address'] = '*';
   newConfig['unified-delay'] = true;
   newConfig['tcp-concurrent'] = true;
   newConfig['keep-alive-interval'] = 60;
@@ -1562,18 +1576,6 @@ function main(config) {
     ...generatedRegionGroups,
   ];
   newConfig['rule-providers'] = finalRuleProviders;
-
-  newConfig['rules'] = [
-    ...priorityRules,
-    ...prefixRules,
-    ...(ruleOptionsEnable.屏蔽代理QUIC流量 ? blockForeignQuic : []),
-    ...functionalRules,
-    'RULE-SET,geolocation-!cn,默认代理',
-    'RULE-SET,cn_ip,直连',
-    'RULE-SET,private_ip,直连',
-    ...functionalIpRules,
-    `MATCH,${ruleOptionsEnable.极简国内外分流模式 ? '默认代理' : '漏网之鱼'}`,
-  ];
 
   return newConfig;
 }
